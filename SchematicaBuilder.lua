@@ -1,4 +1,4 @@
-local Keys = loadstring(game:HttpGet("https://raw.githubusercontent.com/gotham10/a/refs/heads/main/RemoteKeys.lua"))()
+local Keys = loadstring(game:HttpGet("https://raw.githubusercontent.com/gotham10/a/main/RemoteKeys.lua"))()
 
 local Builder = {}
 do
