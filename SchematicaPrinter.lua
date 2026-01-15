@@ -1,4 +1,17 @@
-local Keys = loadstring(game:HttpGet("https://raw.githubusercontent.com/gotham10/a/main/RemoteKeys.lua"))()
+local Keys = {
+    PlaceBlockArgName = "mugxoJixuszjvCbkdfloi",
+    PlaceBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nswxTUgrkwbsbjf",
+    DestroyBlockArgName = "vzzysogImQgcZtgeF",
+    DestroyBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nyzwicssuxmkzmqvbgqgQMuyc",
+    PickupToolArgName = "rRXadkqjceufifsxlyVawqjctICymx",
+    PickupToolArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\navo",
+    HarvestCropArgName = "svxxnl",
+    HarvestCropArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nsbwCmhvipmvepbfx",
+    DepositToolArgName = "cswnYcslOo",
+    DepositToolArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\ndvMjflLptxdttobkwbeyTqrnepcggesadnD",
+    MobArgName = "tOgiNjhesroxyv",
+    MobArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nceJcierdeb"
+}
 
 local Printer = {}
 do
@@ -74,7 +87,7 @@ do
                         if Counter >= 50 then
                             repeat task.wait() until Counter == 0 
                         end
-                        task.wait(WAmount)
+                        task.wait(WAmount or 0.1)
                     end
                 end
             end
@@ -111,7 +124,7 @@ do
                 if Counter >= 50 then
                     repeat task.wait() until Counter == 0
                 end
-                task.wait(WAmount)
+                task.wait(WAmount or 0.1)
             end
         end
         repeat task.wait() until Counter == 0 or self.Abort
@@ -154,7 +167,7 @@ do
                         if Counter >= 50 then
                             repeat task.wait() until Counter == 0 
                         end
-                        task.wait(WAmount)
+                        task.wait(WAmount or 0.1)
                     end
                 end
             end
