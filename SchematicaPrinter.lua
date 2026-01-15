@@ -1,127 +1,175 @@
-local Keys = getgenv().Keys or {
+local Keys = {
     PlaceBlockArgName = "mugxoJixuszjvCbkdfloi",
     PlaceBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nswxTUgrkwbsbjf",
     DestroyBlockArgName = "vzzysogImQgcZtgeF",
     DestroyBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nyzwicssuxmkzmqvbgqgQMuyc"
 }
 
+local WAmount = 0
 local Printer = {}
-Printer.__index = Printer
 
-local Remotes = game.ReplicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged
+do
+    Printer.__index = Printer
+    setmetatable(Printer, {
+        __tostring = function()
+            return "Printer"
+        end
+    })
 
-function Printer.new(Data)
-    local self = setmetatable({}, Printer)
-    self.Data = Data
-    self.Blocks = Data.Blocks or {}
-    self.Model = Instance.new("Model")
-    self.Model.Name = "SchematicPreview"
-    self.PrimaryPart = nil
-    self.CFrame = CFrame.new()
-    self.Abort = false
-    self.Transparency = 0.5
-    return self
-end
+    local Remotes = game.ReplicatedStorage.rbxts_include.node_modules["@rbxts"].net.out._NetManaged
 
-function Printer:Init()
-    for blockName, positions in pairs(self.Blocks) do
-        for _, data in ipairs(positions) do
-            local cf = CFrame.new(unpack(data.C))
-            local p = Instance.new("Part")
-            p.Name = blockName
-            p.Size = Vector3.new(3, 3, 3)
-            p.Transparency = self.Transparency
-            p.CanCollide = false
-            p.Anchored = true
-            p.Material = Enum.Material.SmoothPlastic
-            p.CFrame = cf
-            p.Parent = self.Model
-            if not self.PrimaryPart then
-                self.PrimaryPart = p
-                self.Model.PrimaryPart = p
+    function Printer.new(Start, End, Block)
+        return setmetatable({Start = Start, End = End, Block = Block, Abort = false}, Printer)
+    end
+
+    function Printer:SetStart(Start)
+        self.Start = Start
+    end
+
+    function Printer:SetEnd(End)
+        self.End = End
+    end
+    
+    function Printer:SetBlock(Block)
+        self.Block = Block
+    end
+
+    function Printer:IsTaken(Position, Block)
+        local Parts = workspace:FindPartsInRegion3(Region3.new(Position, Position), nil, math.huge)
+        for _,v in next, Parts do
+            if v.Parent and v.Parent.Name == "Blocks" then
+                return (Block and v or true)
             end
         end
+        return false
     end
-end
-
-function Printer:SetCFrame(cf)
-    self.CFrame = cf
-    if self.Model.PrimaryPart then
-        self.Model:SetPrimaryPartCFrame(cf)
-    end
-end
-
-function Printer:SetVisibility(val)
-    self.Transparency = val
-    for _, v in ipairs(self.Model:GetChildren()) do
-        if v:IsA("BasePart") then
-            v.Transparency = val
+    
+    function Printer:Build(Callback)
+        local Counter = 0
+        Callback.Start()
+        
+        local Start, End = Vector3.new(math.min(self.Start.X, self.End.X), math.min(self.Start.Y, self.End.Y), math.min(self.Start.Z, self.End.Z)), Vector3.new(math.max(self.Start.X, self.End.X), math.max(self.Start.Y, self.End.Y), math.max(self.Start.Z, self.End.Z))
+        for X = Start.X, End.X, 3 do
+            if self.Abort then 
+                Counter = 0
+                break
+            end
+            for Y = Start.Y, End.Y, 3 do
+                if self.Abort then 
+                    Counter = 0
+                    break
+                end
+                for Z = Start.Z, End.Z, 3 do
+                    if self.Abort then 
+                        Counter = 0
+                        break
+                    end
+                    local Position = Vector3.new(X, Y, Z)
+                    if not self:IsTaken(Position) then
+                        task.spawn(function()
+                            Counter = Counter + 1
+                            repeat task.wait() 
+                                Callback.Build(Position)
+                                Remotes["CLIENT_BLOCK_PLACE_REQUEST"]:InvokeServer({
+                                    ["cframe"] = CFrame.new(Position), 
+                                    ["blockType"] = self.Block, 
+                                    [Keys.PlaceBlockArgName] = Keys.PlaceBlockArgCode
+                                })
+                            until self:IsTaken(Position) or self.Abort or not game.Players.LocalPlayer.Character:FindFirstChild(self.Block) or Counter == 0
+                            Counter = Counter - 1
+                        end)
+                        if Counter >= 50 then
+                            repeat task.wait() until Counter == 0 
+                        end
+                        task.wait(WAmount)
+                    end
+                end
+            end
         end
+        repeat task.wait() until Counter == 0 or self.Abort
+        self.Abort = false
+        Callback.End()
     end
-end
 
-function Printer:Render(state)
-    if state then
-        self.Model.Parent = workspace
-    else
-        self.Model.Parent = nil
-    end
-end
-
-function Printer:Destroy()
-    self.Model:Destroy()
-end
-
-function Printer:IsTaken(pos)
-    local region = Region3.new(pos - Vector3.new(0.1, 0.1, 0.1), pos + Vector3.new(0.1, 0.1, 0.1))
-    local parts = workspace:FindPartsInRegion3(region, nil, math.huge)
-    for _, v in ipairs(parts) do
-        if v.Parent and v.Parent.Name == "Blocks" then
-            return true
-        end
-    end
-    return false
-end
-
-function Printer:Build(Callback)
-    self.Abort = false
-    local Counter = 0
-    Callback.Start()
-
-    for blockName, positions in pairs(self.Blocks) do
-        if self.Abort then break end
-        for _, data in ipairs(positions) do
-            if self.Abort then break end
-            
-            local relativeCF = CFrame.new(unpack(data.C))
-            local targetPos = (self.CFrame * relativeCF).Position
-            local targetCF = CFrame.new(targetPos)
-
-            if not self:IsTaken(targetPos) then
+    function Printer:Reverse(Callback)
+        local Counter = 0
+        Callback.Start() 
+        
+        local Start, End = Vector3.new(self.Start.X, self.Start.Y, self.Start.Z), Vector3.new(self.End.X, self.End.Y, self.End.Z)
+        local Region = Region3.new(Start, End)
+        for _,v in next, workspace:FindPartsInRegion3(Region, nil, math.huge) do
+            if tostring(v.Parent) == "Blocks" and v:FindFirstChild("Health") and v.Name ~= "bedrock" and not v:FindFirstChild("portal-to-spawn") then
+                if self.Abort then 
+                    self.Abort = false
+                    Counter = 0
+                    break
+                end
                 task.spawn(function()
                     Counter = Counter + 1
-                    repeat 
-                        task.wait()
-                        Callback.Build(targetCF)
-                        Remotes["CLIENT_BLOCK_PLACE_REQUEST"]:InvokeServer({
-                            ["cframe"] = targetCF,
-                            ["blockType"] = blockName,
-                            [getgenv().Keys.PlaceBlockArgName] = getgenv().Keys.PlaceBlockArgCode
+                    repeat task.wait()
+                        Callback.Build(v.Position)
+                        Remotes["CLIENT_BLOCK_HIT_REQUEST"]:InvokeServer({
+                            ["block"] = v, 
+                            [Keys.DestroyBlockArgName] = Keys.DestroyBlockArgCode
                         })
-                    until self:IsTaken(targetPos) or self.Abort or Counter == 0
+                    until not v or not v.Parent or Counter == 0
                     Counter = Counter - 1
                 end)
-
                 if Counter >= 50 then
-                    repeat task.wait() until Counter == 0 or self.Abort
+                    repeat task.wait() until Counter == 0
                 end
-                task.wait(getgenv().WAmount or 0.1)
+                task.wait(WAmount)
             end
         end
+        repeat task.wait() until Counter == 0 or self.Abort
+        Callback.End()
     end
 
-    repeat task.wait() until Counter == 0 or self.Abort
-    Callback.End()
+    function Printer:Reverse2(Callback)
+        local Counter = 0
+        Callback.Start()
+        
+        local Start, End = Vector3.new(math.min(self.Start.X, self.End.X), math.min(self.Start.Y, self.End.Y), math.min(self.Start.Z, self.End.Z)), Vector3.new(math.max(self.Start.X, self.End.X), math.max(self.Start.Y, self.End.Y), math.max(self.Start.Z, self.End.Z))
+        for X = Start.X, End.X, 3 do
+            if self.Abort then 
+                Counter = 0
+                break
+            end
+            for Y = Start.Y, End.Y, 3 do
+                if self.Abort then 
+                    Counter = 0
+                    break
+                end
+                for Z = Start.Z, End.Z, 3 do
+                    if self.Abort then 
+                        Counter = 0
+                        break
+                    end
+                    local Position = Vector3.new(X, Y, Z)
+                    if self:IsTaken(Position) then
+                        task.spawn(function()
+                            Counter = Counter + 1
+                            repeat task.wait() 
+                                Callback.Build(Position)
+                                Remotes["CLIENT_BLOCK_HIT_REQUEST"]:InvokeServer({
+                                    ["block"] = self:IsTaken(Position, true), 
+                                    [Keys.DestroyBlockArgName] = Keys.DestroyBlockArgCode
+                                })
+                            until not self:IsTaken(Position) or self.Abort or Counter == 0
+                            Counter = Counter - 1
+                        end)
+                        if Counter >= 50 then
+                            repeat task.wait() until Counter == 0 
+                        end
+                        task.wait(WAmount)
+                    end
+                end
+            end
+        end
+        repeat task.wait() until Counter == 0 or self.Abort
+        self.Abort = false
+        Callback.End()
+    end
 end
 
 return Printer
