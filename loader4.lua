@@ -23,7 +23,7 @@ local Version = {
         ["Map"] = "🗺️", ["Print"] = "🖨️", ["Hammer"] = "🔨", ["Abort"] = "🛑",
         ["Rotate"] = "🔄", ["Add"] = "➕", ["File"] = "📄", ["Rocket"] = "🚀",
         ["Paper"] = "📝", ["Save"] = "💾", ["Scale"] = "⚖️", ["Fly"] = "🕊️",
-        ["Noclip"] = "👻", ["Warning"] = "⚠️"
+        ["Noclip"] = "👻", ["Warning"] = "⚠️", ["Herb"] = "🌿", ["Craft"] = "🔨"
     }
 }
 
@@ -38,6 +38,8 @@ local TweenService = game:GetService("TweenService")
 
 function Notification:Notify(info, style, icon)
     local sg = Instance.new("ScreenGui", CoreGui)
+    sg.Name = "ExodusNotify"
+    
     local frame = Instance.new("Frame", sg)
     frame.Size = UDim2.new(0, 300, 0, 90)
     frame.Position = UDim2.new(1, 10, 1, -110)
@@ -47,12 +49,12 @@ function Notification:Notify(info, style, icon)
     
     local accent = Instance.new("Frame", frame)
     accent.Size = UDim2.new(0, 4, 1, 0)
-    accent.BackgroundColor3 = Color3.fromRGB(150, 100, 255)
+    accent.BackgroundColor3 = style and style.OutlineColor or Color3.fromRGB(150, 100, 255)
     accent.BorderSizePixel = 0
     Instance.new("UICorner", accent)
 
     local title = Instance.new("TextLabel", frame)
-    title.Size = UDim2.new(1, -50, 0, 30)
+    title.Size = UDim2.new(1, -60, 0, 30)
     title.Position = UDim2.new(0, 15, 0, 10)
     title.Text = info.Title or "System Exodus"
     title.TextColor3 = Color3.new(1, 1, 1)
@@ -60,6 +62,7 @@ function Notification:Notify(info, style, icon)
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Font = Enum.Font.GothamBold
     title.TextSize = 14
+    title.RichText = true
     
     local desc = Instance.new("TextLabel", frame)
     desc.Size = UDim2.new(1, -30, 1, -45)
@@ -71,6 +74,16 @@ function Notification:Notify(info, style, icon)
     desc.TextWrapped = true
     desc.Font = Enum.Font.Gotham
     desc.TextSize = 12
+    desc.RichText = true
+
+    if icon and icon.Type == "image" then
+        local img = Instance.new("ImageLabel", frame)
+        img.Size = UDim2.new(0, 24, 0, 24)
+        img.Position = UDim2.new(1, -35, 0, 12)
+        img.Image = icon.Image
+        img.ImageColor3 = icon.ImageColor or Color3.new(1,1,1)
+        img.BackgroundTransparency = 1
+    end
 
     TweenService:Create(frame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(1, -310, 1, -110)}):Play()
     
@@ -88,6 +101,7 @@ function Finity.new(title, size, extra, callback)
     
     local sg = Instance.new("ScreenGui", CoreGui)
     sg.Name = "FinityUI"
+    sg.ResetOnSpawn = false
     
     local main = Instance.new("Frame", sg)
     main.Size = size
@@ -140,6 +154,7 @@ function Finity.new(title, size, extra, callback)
     sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
     sidebar.AutomaticCanvasSize = Enum.AutomaticSize.Y
     sidebar.ScrollBarThickness = 2
+    sidebar.ScrollBarImageColor3 = Color3.fromRGB(150, 100, 255)
 
     local sideLayout = Instance.new("UIListLayout", sidebar)
     sideLayout.Padding = UDim.new(0, 2)
@@ -182,22 +197,13 @@ function Finity.new(title, size, extra, callback)
         catFrame.ScrollBarThickness = 3
         catFrame.ScrollBarImageColor3 = Color3.fromRGB(150, 100, 255)
         
-        local layout = Instance.new("UIGridLayout", catFrame)
-        layout.CellPadding = UDim2.new(0, 10, 0, 10)
-        layout.CellSize = UDim2.new(0.47, 0, 0, 10)
+        local layout = Instance.new("UIListLayout", catFrame)
+        layout.Padding = UDim.new(0, 10)
         layout.SortOrder = Enum.SortOrder.LayoutOrder
-
-        local function updateCellSize()
-            for _, child in pairs(catFrame:GetChildren()) do
-                if child:IsA("Frame") then
-                    child.AutomaticSize = Enum.AutomaticSize.Y
-                end
-            end
-        end
-        catFrame.ChildAdded:Connect(updateCellSize)
+        layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
         Instance.new("UIPadding", catFrame).PaddingTop = UDim.new(0, 10)
-        Instance.new("UIPadding", catFrame).PaddingLeft = UDim.new(0, 10)
+        Instance.new("UIPadding", catFrame).PaddingBottom = UDim.new(0, 10)
 
         btn.MouseButton1Click:Connect(function()
             for _, v in pairs(content:GetChildren()) do v.Visible = false end
@@ -215,7 +221,10 @@ function Finity.new(title, size, extra, callback)
 
         function cat:Sector(secName)
             local sector = {}
+            if secName == "" then return sector end
+
             local secFrame = Instance.new("Frame", catFrame)
+            secFrame.Size = UDim2.new(0.94, 0, 0, 0)
             secFrame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
             secFrame.BorderSizePixel = 0
             secFrame.AutomaticSize = Enum.AutomaticSize.Y
