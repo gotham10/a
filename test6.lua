@@ -43,12 +43,12 @@ function Notification:Notify(info, style, icon)
     local frame = Instance.new("Frame", sg)
     frame.Size = UDim2.new(0, 280, 0, 70)
     frame.Position = UDim2.new(1, 10, 1, -85)
-    frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    frame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
     frame.BorderSizePixel = 0
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 4)
     
     local str = Instance.new("UIStroke", frame)
-    str.Color = Color3.fromRGB(40, 40, 40)
+    str.Color = Color3.fromRGB(35, 35, 35)
     str.Thickness = 1
 
     local accent = Instance.new("Frame", frame)
@@ -72,7 +72,7 @@ function Notification:Notify(info, style, icon)
     desc.Size = UDim2.new(1, -25, 1, -35)
     desc.Position = UDim2.new(0, 12, 0, 28)
     desc.Text = info.Description or ""
-    desc.TextColor3 = Color3.fromRGB(160, 160, 160)
+    desc.TextColor3 = Color3.fromRGB(150, 150, 150)
     desc.BackgroundTransparency = 1
     desc.TextXAlignment = Enum.TextXAlignment.Left
     desc.TextWrapped = true
@@ -110,30 +110,30 @@ function Finity.new(title, size, extra, callback)
     
     local main = Instance.new("Frame", sg)
     main.Size = size
-    main.Position = UDim2.new(0.5, -size.X.Offset/2, 0.5, -size.Y.Offset/2 + 50)
-    main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+    main.Position = UDim2.new(0.5, -size.X.Offset/2, 0.5, -size.Y.Offset/2 + 60)
+    main.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
     main.BorderSizePixel = 0
     main.ClipsDescendants = true
     main.BackgroundTransparency = 1
-    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 5)
+    Instance.new("UICorner", main).CornerRadius = UDim.new(0, 4)
     
     local stroke = Instance.new("UIStroke", main)
-    stroke.Color = Color3.fromRGB(40, 40, 40)
+    stroke.Color = Color3.fromRGB(35, 35, 35)
     stroke.Thickness = 1
     stroke.Transparency = 1
     
     local header = Instance.new("Frame", main)
     header.Size = UDim2.new(1, 0, 0, 32)
-    header.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+    header.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     header.BorderSizePixel = 0
-    Instance.new("UICorner", header).CornerRadius = UDim.new(0, 5)
+    Instance.new("UICorner", header).CornerRadius = UDim.new(0, 4)
     
     local line = Instance.new("Frame", main)
     line.Size = UDim2.new(1, 0, 0, 1)
     line.Position = UDim2.new(0, 0, 0, 32)
-    line.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    line.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     line.BorderSizePixel = 0
-    line.ZIndex = 4
+    line.ZIndex = 5
 
     local dragging, dragInput, dragStart, startPos
     local function update(input)
@@ -167,7 +167,7 @@ function Finity.new(title, size, extra, callback)
     local sidebar = Instance.new("ScrollingFrame", main)
     sidebar.Position = UDim2.new(0, 0, 0, 33)
     sidebar.Size = UDim2.new(0, 140, 1, -33)
-    sidebar.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+    sidebar.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
     sidebar.BorderSizePixel = 0
     sidebar.CanvasSize = UDim2.new(0, 0, 0, 0)
     sidebar.AutomaticCanvasSize = Enum.AutomaticSize.Y
@@ -185,12 +185,12 @@ function Finity.new(title, size, extra, callback)
     local sep = Instance.new("Frame", main)
     sep.Size = UDim2.new(0, 1, 1, -33)
     sep.Position = UDim2.new(0, 140, 0, 33)
-    sep.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    sep.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     sep.BorderSizePixel = 0
     sep.ZIndex = 2
 
-    TweenService:Create(main, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Position = UDim2.new(0.5, -size.X.Offset/2, 0.5, -size.Y.Offset/2), BackgroundTransparency = 0}):Play()
-    TweenService:Create(stroke, TweenInfo.new(0.7), {Transparency = 0}):Play()
+    TweenService:Create(main, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Position = UDim2.new(0.5, -size.X.Offset/2, 0.5, -size.Y.Offset/2), BackgroundTransparency = 0}):Play()
+    TweenService:Create(stroke, TweenInfo.new(0.6), {Transparency = 0}):Play()
 
     function UI:Destroy() sg:Destroy() end
     function UI.ChangeToggleKey(key) toggleKey = key end
@@ -209,7 +209,7 @@ function Finity.new(title, size, extra, callback)
         btn.Size = UDim2.new(1, 0, 0, 30)
         btn.Text = name
         btn.BackgroundTransparency = 1
-        btn.TextColor3 = Color3.fromRGB(130, 130, 130)
+        btn.TextColor3 = Color3.fromRGB(120, 120, 120)
         btn.Font = Enum.Font.GothamMedium
         btn.TextSize = 10
         btn.TextXAlignment = Enum.TextXAlignment.Left
@@ -236,10 +236,8 @@ function Finity.new(title, size, extra, callback)
         rightSide.Position = UDim2.new(0.5, 4, 0, 12)
         rightSide.BackgroundTransparency = 1
 
-        local ll = Instance.new("UIListLayout", leftSide)
-        ll.Padding = UDim.new(0, 10)
-        local rl = Instance.new("UIListLayout", rightSide)
-        rl.Padding = UDim.new(0, 10)
+        Instance.new("UIListLayout", leftSide).Padding = UDim.new(0, 10)
+        Instance.new("UIListLayout", rightSide).Padding = UDim.new(0, 10)
 
         local selInd = Instance.new("Frame", btn)
         selInd.Size = UDim2.new(0, 2, 0, 14)
@@ -252,24 +250,37 @@ function Finity.new(title, size, extra, callback)
             for _, v in pairs(content:GetChildren()) do v.Visible = false end
             for _, b in pairs(sidebar:GetChildren()) do 
                 if b:IsA("TextButton") then 
-                    TweenService:Create(b, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(130, 130, 130), BackgroundTransparency = 1}):Play()
+                    TweenService:Create(b, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(120, 120, 120), BackgroundTransparency = 1}):Play()
                     TweenService:Create(b:FindFirstChild("Frame"), TweenInfo.new(0.3), {Transparency = 1}):Play()
                 end 
             end
             catFrame.Visible = true
-            TweenService:Create(btn, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(160, 110, 255), BackgroundTransparency = 0.95}):Play()
+            TweenService:Create(btn, TweenInfo.new(0.3), {TextColor3 = Color3.fromRGB(160, 110, 255), BackgroundTransparency = 0.96}):Play()
             TweenService:Create(selInd, TweenInfo.new(0.3), {Transparency = 0}):Play()
             
-            for _, sect in pairs(catFrame:GetDescendants()) do
-                if sect:IsA("Frame") and sect.Name == "SectorCard" then
-                    local originalPos = sect.Position
-                    sect.Position = originalPos + UDim2.new(0, 0, 0, 15)
-                    sect.BackgroundTransparency = 1
-                    local str = sect:FindFirstChild("UIStroke")
+            catFrame.CanvasPosition = Vector2.new(0,0)
+            local stagger = 0
+            local allSectors = {}
+            for _, side in pairs({leftSide, rightSide}) do
+                for _, container in pairs(side:GetChildren()) do
+                    if container:IsA("Frame") and container.Name == "SectorContainer" then
+                        table.insert(allSectors, container:FindFirstChild("SectorCard"))
+                    end
+                end
+            end
+            
+            for _, card in pairs(allSectors) do
+                if card then
+                    card.Position = UDim2.new(0, 0, 0, 25)
+                    card.BackgroundTransparency = 1
+                    local str = card:FindFirstChild("UIStroke")
                     if str then str.Transparency = 1 end
                     
-                    TweenService:Create(sect, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Position = originalPos, BackgroundTransparency = 0}):Play()
-                    if str then TweenService:Create(str, TweenInfo.new(0.5), {Transparency = 0}):Play() end
+                    task.delay(stagger, function()
+                        TweenService:Create(card, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 0}):Play()
+                        if str then TweenService:Create(str, TweenInfo.new(0.6), {Transparency = 0}):Play() end
+                    end)
+                    stagger = stagger + 0.04
                 end
             end
         end)
@@ -277,7 +288,7 @@ function Finity.new(title, size, extra, callback)
         if #sidebar:GetChildren() == 2 then 
             catFrame.Visible = true 
             btn.TextColor3 = Color3.fromRGB(160, 110, 255)
-            btn.BackgroundTransparency = 0.95
+            btn.BackgroundTransparency = 0.96
             selInd.Transparency = 0
         end
 
@@ -286,16 +297,24 @@ function Finity.new(title, size, extra, callback)
             if secName == "" then return sector end
             
             local target = #leftSide:GetChildren() <= #rightSide:GetChildren() and leftSide or rightSide
-            local secFrame = Instance.new("Frame", target)
+            
+            local container = Instance.new("Frame", target)
+            container.Name = "SectorContainer"
+            container.BackgroundTransparency = 1
+            container.Size = UDim2.new(1, 0, 0, 0)
+            container.AutomaticSize = Enum.AutomaticSize.Y
+            container.ClipsDescendants = true
+
+            local secFrame = Instance.new("Frame", container)
             secFrame.Name = "SectorCard"
             secFrame.Size = UDim2.new(1, 0, 0, 0)
-            secFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+            secFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
             secFrame.BorderSizePixel = 0
             secFrame.AutomaticSize = Enum.AutomaticSize.Y
             Instance.new("UICorner", secFrame).CornerRadius = UDim.new(0, 4)
             
             local st = Instance.new("UIStroke", secFrame)
-            st.Color = Color3.fromRGB(35, 35, 35)
+            st.Color = Color3.fromRGB(30, 30, 30)
             st.Thickness = 1
 
             local secLayout = Instance.new("UIListLayout", secFrame)
@@ -321,7 +340,7 @@ function Finity.new(title, size, extra, callback)
                     l.Size = UDim2.new(0.92, 0, 0, 0)
                     l.AutomaticSize = Enum.AutomaticSize.Y
                     l.Text = label
-                    l.TextColor3 = Color3.fromRGB(160, 160, 160)
+                    l.TextColor3 = Color3.fromRGB(150, 150, 150)
                     l.BackgroundTransparency = 1
                     l.RichText = true
                     l.TextSize = 10
@@ -332,20 +351,20 @@ function Finity.new(title, size, extra, callback)
                     local b = Instance.new("TextButton", secFrame)
                     b.Size = UDim2.new(0.92, 0, 0, 26)
                     b.Text = (options and options.text ~= "") and options.text or label
-                    b.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-                    b.TextColor3 = Color3.fromRGB(210, 210, 210)
+                    b.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+                    b.TextColor3 = Color3.fromRGB(200, 200, 200)
                     b.Font = Enum.Font.GothamMedium
                     b.TextSize = 10
                     Instance.new("UICorner", b).CornerRadius = UDim.new(0, 3)
                     local bs = Instance.new("UIStroke", b)
-                    bs.Color = Color3.fromRGB(45, 45, 45)
+                    bs.Color = Color3.fromRGB(40, 40, 40)
                     
-                    b.MouseEnter:Connect(function() TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}):Play() end)
-                    b.MouseLeave:Connect(function() TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(28, 28, 28)}):Play() end)
+                    b.MouseEnter:Connect(function() TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play() end)
+                    b.MouseLeave:Connect(function() TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(24, 24, 24)}):Play() end)
                     b.MouseButton1Click:Connect(function()
                         local t = TweenService:Create(b, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(160, 110, 255)})
                         t:Play() t.Completed:Wait()
-                        TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(28, 28, 28)}):Play()
+                        TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(24, 24, 24)}):Play()
                         callback()
                     end)
                     UI.Features["- " .. label .. ":"] = {button = b}
@@ -355,7 +374,7 @@ function Finity.new(title, size, extra, callback)
                     b.Size = UDim2.new(0.92, 0, 0, 26)
                     b.Text = label
                     b.BackgroundTransparency = 1
-                    b.TextColor3 = val and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150)
+                    b.TextColor3 = val and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(140, 140, 140)
                     b.Font = Enum.Font.GothamMedium
                     b.TextSize = 10
                     b.TextXAlignment = Enum.TextXAlignment.Left
@@ -364,7 +383,7 @@ function Finity.new(title, size, extra, callback)
                     local back = Instance.new("Frame", b)
                     back.Size = UDim2.new(0, 28, 0, 14)
                     back.Position = UDim2.new(1, -32, 0.5, -7)
-                    back.BackgroundColor3 = val and Color3.fromRGB(160, 110, 255) or Color3.fromRGB(40, 40, 40)
+                    back.BackgroundColor3 = val and Color3.fromRGB(160, 110, 255) or Color3.fromRGB(35, 35, 35)
                     Instance.new("UICorner", back).CornerRadius = UDim.new(1, 0)
                     
                     local dot = Instance.new("Frame", back)
@@ -375,8 +394,8 @@ function Finity.new(title, size, extra, callback)
 
                     function cheat:toggleState(s)
                         val = s
-                        TweenService:Create(b, TweenInfo.new(0.25), {TextColor3 = val and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 150, 150)}):Play()
-                        TweenService:Create(back, TweenInfo.new(0.25), {BackgroundColor3 = val and Color3.fromRGB(160, 110, 255) or Color3.fromRGB(40, 40, 40)}):Play()
+                        TweenService:Create(b, TweenInfo.new(0.25), {TextColor3 = val and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(140, 140, 140)}):Play()
+                        TweenService:Create(back, TweenInfo.new(0.25), {BackgroundColor3 = val and Color3.fromRGB(160, 110, 255) or Color3.fromRGB(35, 35, 35)}):Play()
                         TweenService:Create(dot, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Position = val and UDim2.new(1, -12, 0.5, -5) or UDim2.new(0, 2, 0.5, -5)}):Play()
                     end
 
@@ -390,35 +409,35 @@ function Finity.new(title, size, extra, callback)
                     d.Size = UDim2.new(0.92, 0, 0, 26)
                     d.PlaceholderText = label
                     d.Text = (options and options.default) or ""
-                    d.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+                    d.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
                     d.TextColor3 = Color3.new(1, 1, 1)
                     d.Font = Enum.Font.Gotham
                     d.TextSize = 10
                     Instance.new("UICorner", d).CornerRadius = UDim.new(0, 3)
-                    Instance.new("UIStroke", d).Color = Color3.fromRGB(45, 45, 45)
+                    Instance.new("UIStroke", d).Color = Color3.fromRGB(40, 40, 40)
                     d.FocusLost:Connect(function() callback(d.Text) end)
                 elseif type == "Textbox" then
                     local t = Instance.new("TextBox", secFrame)
                     t.Size = UDim2.new(0.92, 0, 0, 26)
                     t.PlaceholderText = (options and options.placeholder) or label
                     t.Text = ""
-                    t.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+                    t.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
                     t.TextColor3 = Color3.new(1, 1, 1)
                     t.Font = Enum.Font.Gotham
                     t.TextSize = 10
                     Instance.new("UICorner", t).CornerRadius = UDim.new(0, 3)
-                    Instance.new("UIStroke", t).Color = Color3.fromRGB(45, 45, 45)
+                    Instance.new("UIStroke", t).Color = Color3.fromRGB(40, 40, 40)
                     t.FocusLost:Connect(function() callback(t.Text) end)
                 elseif type == "Keybind" then
                     local b = Instance.new("TextButton", secFrame)
                     b.Size = UDim2.new(0.92, 0, 0, 26)
                     b.Text = label .. " [" .. (options and options.default or "None") .. "]"
-                    b.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+                    b.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
                     b.TextColor3 = Color3.fromRGB(180, 180, 180)
                     b.Font = Enum.Font.GothamMedium
                     b.TextSize = 10
                     Instance.new("UICorner", b).CornerRadius = UDim.new(0, 3)
-                    Instance.new("UIStroke", b).Color = Color3.fromRGB(45, 45, 45)
+                    Instance.new("UIStroke", b).Color = Color3.fromRGB(40, 40, 40)
                     
                     b.MouseButton1Click:Connect(function()
                         b.Text = "Listening..."
