@@ -43,8 +43,7 @@ function Notification:Notify(info, style, icon)
     frame.Position = UDim2.new(1, 10, 1, -110)
     frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     frame.BorderSizePixel = 0
-    local corner = Instance.new("UICorner", frame)
-    corner.CornerRadius = UDim.new(0, 8)
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
     
     local accent = Instance.new("Frame", frame)
     accent.Size = UDim2.new(0, 4, 1, 0)
@@ -95,14 +94,31 @@ function Finity.new(title, size, extra, callback)
     main.Position = UDim2.new(0.5, -size.X.Offset/2, 0.5, -size.Y.Offset/2)
     main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     main.BorderSizePixel = 0
+    main.ClipsDescendants = true
     Instance.new("UICorner", main).CornerRadius = UDim.new(0, 10)
     
     local header = Instance.new("Frame", main)
     header.Size = UDim2.new(1, 0, 0, 45)
     header.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     header.BorderSizePixel = 0
-    local hc = Instance.new("UICorner", header)
+    Instance.new("UICorner", header).CornerRadius = UDim.new(0, 10)
     
+    local dragging, dragInput, dragStart, startPos
+    local function update(input)
+        local delta = input.Position - dragStart
+        main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    header.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = main.Position
+            input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+        end
+    end)
+    header.InputChanged:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseMovement then dragInput = input end end)
+    UserInputService.InputChanged:Connect(function(input) if input == dragInput and dragging then update(input) end end)
+
     local titleLabel = Instance.new("TextLabel", header)
     titleLabel.Size = UDim2.new(1, -20, 1, 0)
     titleLabel.Position = UDim2.new(0, 15, 0, 0)
@@ -147,7 +163,7 @@ function Finity.new(title, size, extra, callback)
         UI.container.Categories[name] = cat
         
         local btn = Instance.new("TextButton", sidebar)
-        btn.Size = UDim2.new(1, 0, 0, 38)
+        btn.Size = UDim2.new(1, 0, 0, 40)
         btn.Text = "  " .. name
         btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         btn.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -164,23 +180,37 @@ function Finity.new(title, size, extra, callback)
         catFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
         catFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
         catFrame.ScrollBarThickness = 3
+        catFrame.ScrollBarImageColor3 = Color3.fromRGB(150, 100, 255)
         
         local layout = Instance.new("UIGridLayout", catFrame)
         layout.CellPadding = UDim2.new(0, 10, 0, 10)
-        layout.CellSize = UDim2.new(0.47, 0, 0, 280)
+        layout.CellSize = UDim2.new(0.47, 0, 0, 10)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+        local function updateCellSize()
+            for _, child in pairs(catFrame:GetChildren()) do
+                if child:IsA("Frame") then
+                    child.AutomaticSize = Enum.AutomaticSize.Y
+                end
+            end
+        end
+        catFrame.ChildAdded:Connect(updateCellSize)
+
         Instance.new("UIPadding", catFrame).PaddingTop = UDim.new(0, 10)
         Instance.new("UIPadding", catFrame).PaddingLeft = UDim.new(0, 10)
 
         btn.MouseButton1Click:Connect(function()
             for _, v in pairs(content:GetChildren()) do v.Visible = false end
-            for _, b in pairs(sidebar:GetChildren()) do if b:IsA("TextButton") then b.TextColor3 = Color3.fromRGB(200, 200, 200) end end
+            for _, b in pairs(sidebar:GetChildren()) do if b:IsA("TextButton") then b.TextColor3 = Color3.fromRGB(200, 200, 200) b.BackgroundColor3 = Color3.fromRGB(30,30,30) end end
             catFrame.Visible = true
             btn.TextColor3 = Color3.fromRGB(150, 100, 255)
+            btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         end)
 
         if #sidebar:GetChildren() == 2 then 
             catFrame.Visible = true 
             btn.TextColor3 = Color3.fromRGB(150, 100, 255)
+            btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         end
 
         function cat:Sector(secName)
@@ -188,6 +218,7 @@ function Finity.new(title, size, extra, callback)
             local secFrame = Instance.new("Frame", catFrame)
             secFrame.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
             secFrame.BorderSizePixel = 0
+            secFrame.AutomaticSize = Enum.AutomaticSize.Y
             Instance.new("UICorner", secFrame)
             
             cat.R[secName] = {Container = secFrame}
@@ -210,7 +241,8 @@ function Finity.new(title, size, extra, callback)
                 local cheat = {}
                 if type == "Label" then
                     local l = Instance.new("TextLabel", secFrame)
-                    l.Size = UDim2.new(0.9, 0, 0, 18)
+                    l.Size = UDim2.new(0.9, 0, 0, 0)
+                    l.AutomaticSize = Enum.AutomaticSize.Y
                     l.Text = label
                     l.TextColor3 = Color3.fromRGB(220, 220, 220)
                     l.BackgroundTransparency = 1
@@ -218,6 +250,7 @@ function Finity.new(title, size, extra, callback)
                     l.TextSize = 11
                     l.TextWrapped = true
                     l.TextXAlignment = Enum.TextXAlignment.Left
+                    l.Font = Enum.Font.Gotham
                 elseif type == "Button" then
                     local b = Instance.new("TextButton", secFrame)
                     b.Size = UDim2.new(0.92, 0, 0, 32)
@@ -233,23 +266,24 @@ function Finity.new(title, size, extra, callback)
                     local val = options and options.enabled or false
                     local b = Instance.new("TextButton", secFrame)
                     b.Size = UDim2.new(0.92, 0, 0, 32)
-                    b.Text = label
+                    b.Text = "  " .. label
                     b.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
                     b.TextColor3 = val and Color3.fromRGB(150, 100, 255) or Color3.fromRGB(180, 180, 180)
                     b.Font = Enum.Font.Gotham
                     b.TextSize = 12
+                    b.TextXAlignment = Enum.TextXAlignment.Left
                     Instance.new("UICorner", b)
                     
                     local indicator = Instance.new("Frame", b)
-                    indicator.Size = UDim2.new(0, 4, 0, 4)
-                    indicator.Position = UDim2.new(1, -15, 0.5, -2)
-                    indicator.BackgroundColor3 = val and Color3.fromRGB(150, 100, 255) or Color3.fromRGB(80, 80, 80)
+                    indicator.Size = UDim2.new(0, 18, 0, 18)
+                    indicator.Position = UDim2.new(1, -25, 0.5, -9)
+                    indicator.BackgroundColor3 = val and Color3.fromRGB(150, 100, 255) or Color3.fromRGB(60, 60, 60)
                     Instance.new("UICorner", indicator)
 
                     function cheat:toggleState(s)
                         val = s
                         b.TextColor3 = val and Color3.fromRGB(150, 100, 255) or Color3.fromRGB(180, 180, 180)
-                        indicator.BackgroundColor3 = val and Color3.fromRGB(150, 100, 255) or Color3.fromRGB(80, 80, 80)
+                        indicator.BackgroundColor3 = val and Color3.fromRGB(150, 100, 255) or Color3.fromRGB(60, 60, 60)
                     end
 
                     b.MouseButton1Click:Connect(function()
