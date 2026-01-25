@@ -5,10 +5,7 @@ local Version = {
     Date = "01/24/2026",
     PlaceVersion = game.PlaceVersion,
     Changelog = {
-        "Fixed UI Overlaps",
-        "Improved Sector Layout",
-        "Optimized Cheat Callbacks",
-        "Modern Aesthetic Update"
+        "Fixed UI",
     },
     Emojis = {
         ["Island"] = "🏝️", ["Clipboard"] = "📋", ["Tractor"] = "🚜", ["Sword"] = "⚔️",
