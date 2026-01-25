@@ -1,8 +1,8 @@
 local Keys = {
-    PlaceBlockArgName = "mugxoJixuszjvCbkdfloi",
-    PlaceBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nswxTUgrkwbsbjf",
-    DestroyBlockArgName = "vzzysogImQgcZtgeF",
-    DestroyBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nyzwicssuxmkzmqvbgqgQMuyc"
+    PlaceBlockArgName = "uwhiHAMdjExWka",
+    PlaceBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nffEgdldU",
+    DestroyBlockArgName = "Xoeoxuqilfgenamojfjmj",
+    DestroyBlockArgCode = "\a\240\159\164\163\240\159\164\161\a\n\a\n\a\nohIstskUiftvgjy",
 }
 
 local WAmount = 0
