@@ -1,7 +1,7 @@
 local Finity = {}
 local Notification = {}
 local Version = {
-    Version = "2.1.0",
+    Version = "2.0.0",
     Date = "01/24/2026",
     PlaceVersion = game.PlaceVersion,
     Changelog = {
