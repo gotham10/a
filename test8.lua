@@ -2,7 +2,7 @@ local Finity = {}
 local Notification = {}
 local Version = {
     Version = "2.1.0",
-    Date = "05/22/2024",
+    Date = "01/24/2026",
     PlaceVersion = game.PlaceVersion,
     Changelog = {
         "Fixed UI Overlaps",
